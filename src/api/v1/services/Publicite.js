@@ -26,9 +26,9 @@ export const getPublicites = async (req, res) => {
           return {
             id:video.id,
             url: video.url,
-            categorie: categorie?.categorie, // Use optional chaining operator to handle null/undefined values
-            categRecette: categRecette?.description,
-            annonceur: annonceur?.nom,
+            categorie: video.idCategorie, 
+            categRecette: video.idCategRecette,
+            annonceur: annonceur?.nom+" "+annonceur?.prenom,
           };
         })
       );
