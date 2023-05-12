@@ -15,7 +15,7 @@ const router = Router();
 
 
 router.post(
-  "/signup",
+  "/auth/signup",
   validateRequestBody(
     z.object({
       mail: z.string().email(),
@@ -32,6 +32,9 @@ router.post(
       // if (existingUser) {
       //   return res.status(400).json({ status: 400, message: "Email already exists" });
       // }
+
+
+      console.log(req.body)
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(mdp, 10);
@@ -61,7 +64,7 @@ router.post(
 
 
 router.post(
-  "/login",
+  "/auth/login",
   validateRequestBody(
     z.object({
       mail: z.string().email(),
@@ -134,11 +137,11 @@ router.post(
   }
 );
 
-router.get("/isAuthenticated", isUserMidd, async (req, res) => {
+router.get("/auth/isAuthenticated", isUserMidd, async (req, res) => {
   res.status(200).json({ status: 200, message: "OK", data: req.user });
 });
 
-router.get("/logout", (_req, res) => {
+router.get("/auth/logout", (_req, res) => {
   try {
     console.log("logout");
     res.clearCookie("token");

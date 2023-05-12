@@ -7,7 +7,7 @@ export const getAnnonceurs = async (req , res)=>{
         const response = await prisma.annonceur.findMany();
         res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({msg : msg.error});
+        res.status(500).json({msg : error.msg});
     }
 }
 
@@ -18,9 +18,13 @@ export const getAnnonceurById = async (req , res)=>{
                 id : Number(req.params.id)
             }
         });
-        res.status(200).json(response);
+        if (response) {
+            res.status(200).json(response);
+        } else {
+            res.status(404).json({ msg: "Annonceur not found" });
+        }
     } catch (error) {
-        res.status(404).json({msg : msg.error});
+        res.status(500).json({msg : error.msg});
     }
 }
 
@@ -57,7 +61,11 @@ export const updateAnnonceur = async (req , res)=>{
                 tel:tel
             }
         });
-        res.status(201).json(annonceur);
+        if (annonceur) {
+            res.status(200).json(annonceur);
+        } else {
+            res.status(404).json({ msg: "Annonceur not found" });
+        }
     } catch (error) {
         res.status(400).json({msg : error.msg});
     }
@@ -70,7 +78,11 @@ export const deleteAnnonceur = async (req , res)=>{
                 id:Number(req.params.id)
             }
         });
-        res.status(201).json(annonceur);
+        if (annonceur) {
+            res.status(200).json(annonceur);
+        } else {
+            res.status(404).json({ msg: "Annonceur not found" });
+        }
     } catch (error) {
         res.status(400).json({msg : error.msg});
     }

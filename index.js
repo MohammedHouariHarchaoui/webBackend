@@ -12,6 +12,7 @@ import RouterCategorie from './src/api/v1/routes/Categorie.js'
 import RouterPublicite from './src/api/v1/routes/Publicite.js'
 import RouterDrink from './src/api/v1/routes/Drink.js'
 import RouterAuthentification from './src/api/v1/routes/Authentification.js'
+import RouterCategorieDrink from './src/api/v1/routes/CategRecette.js'
 
 const { get } = pkg;
 const app = express();
@@ -28,7 +29,8 @@ app.use(RouterAnnonceur)
 app.use(RouterCategorie)
 app.use(RouterPublicite)
 app.use(RouterDrink)
-app.use("/auth",RouterAuthentification)
+app.use(RouterAuthentification)
+app.use(RouterCategorieDrink)
 
 app.get('/users', async (req, res) => {
   const users = await prisma.users.findMany()

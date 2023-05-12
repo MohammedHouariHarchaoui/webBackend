@@ -2,34 +2,34 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient();
 
-export const getCategories = async (req , res)=>{
+export const getCategoriesDrink = async (req , res)=>{
     try {
-        const response = await prisma.categorie.findMany();
+        const response = await prisma.categoryrecette.findMany();
         res.status(200).json(response);
     } catch (error) {
         res.status(500).json({msg : error.msg});
     }
 }
 
-export const getCategorieById = async (req , res)=>{
+export const getCategorieDrinkById = async (req , res)=>{
     try {
-        const response = await prisma.categorie.findUnique({
+        const response = await prisma.categoryrecette.findUnique({
             where:{
                 id : Number(req.params.id)
             }
         });
         res.status(200).json(response);
     } catch (error) {
-        res.status(404).json({msg : error.msg});
+        res.status(404).json({msg :error.msg});
     }
 }
 
-export const createCategorie = async (req , res)=>{
-    const {categorie} = req.body;
+export const createCategorieDrink = async (req , res)=>{
+    const {description} = req.body;
     try {
-        const categorie_obj = await prisma.categorie.create({
+        const categorie_obj = await prisma.categoryrecette.create({
             data:{
-                categorie: categorie
+                description: description
             }
         });
         res.status(201).json(categorie_obj);
@@ -38,15 +38,15 @@ export const createCategorie = async (req , res)=>{
     }
 }
 
-export const updateCategorie = async (req , res)=>{
-    const {categorie} = req.body;
+export const updateCategorieDrink = async (req , res)=>{
+    const {description} = req.body;
     try {
-        const categorie_obj = await prisma.categorie.update({
+        const categorie_obj = await prisma.categoryrecette.update({
             where:{
                 id:Number(req.params.id)
             },
             data:{
-                categorie: categorie
+                description: description
             }
         });
         res.status(201).json(categorie_obj);
@@ -55,9 +55,9 @@ export const updateCategorie = async (req , res)=>{
     }
 }
 
-export const deleteCategorie = async (req , res)=>{
+export const deleteCategorieDrink = async (req , res)=>{
     try {
-        const categorie = await prisma.categorie.delete({
+        const categorie = await prisma.categoryrecette.delete({
             where:{
                 id:Number(req.params.id)
             }

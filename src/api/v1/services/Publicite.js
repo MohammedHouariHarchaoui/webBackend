@@ -1,6 +1,7 @@
 import formidable from 'formidable';
 import cloudinary from 'cloudinary';
 import { PrismaClient } from "@prisma/client"
+import { getAnnonceurById } from './Annonceur.js';
 
 const prisma = new PrismaClient();
 
@@ -9,15 +10,38 @@ cloudinary.v2.config({
   api_key: '349196438397243',
   api_secret: '_Rto_VZa54y1kfR1_dJSn4wpS2Q',
 });
-
-export const getPublicites = async (req , res)=>{
+export const getPublicites = async (req, res) => {
     try {
-        const response = await prisma.publicite.findMany();
-        res.status(200).json(response);
+      const response = await prisma.publicite.findMany();
+  
+      const transformedVideos = await Promise.all(
+        response.map(async (video) => {
+          const [categorie, categRecette, annonceur] = await Promise.all([
+            prisma.categorie.findUnique({ where: { id: video.idCategorie } }),
+            prisma.categoryrecette.findUnique({
+              where: { id: video.idCategRecette },
+            }),
+            prisma.annonceur.findUnique({ where: { id: video.idAnnonceur } }),
+          ]);
+          return {
+            id:video.id,
+            url: video.url,
+            categorie: categorie?.categorie, // Use optional chaining operator to handle null/undefined values
+            categRecette: categRecette?.description,
+            annonceur: annonceur?.nom,
+          };
+        })
+      );
+  
+      console.log(transformedVideos);
+      res.status(200).json(transformedVideos); // Send transformedVideos instead of response
+  
     } catch (error) {
-        res.status(500).json({msg : msg.error});
+      res.status(500).json({ msg: error.message }); // Use error.message instead of error.msg
     }
-}
+  };
+  
+  
 
 export const getPubliciteById = async (req , res)=>{
     try {
