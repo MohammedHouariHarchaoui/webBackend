@@ -109,7 +109,7 @@ CREATE TABLE `recette` (
     `price` DECIMAL(65, 30) NOT NULL DEFAULT 0.0,
     `imageLink` VARCHAR(120) NULL,
 
-    UNIQUE INDEX `recette_idCategRecette_key`(`idCategRecette`),
+    INDEX `recette_idCategRecette_key`(`idCategRecette`),
     INDEX `idCategRecette`(`idCategRecette`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

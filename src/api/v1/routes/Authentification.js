@@ -2,7 +2,7 @@ import { Router } from "express";
 import { config } from "dotenv";
 import { validateRequestBody } from "zod-express-middleware";
 import { z } from "zod";
-import { getPassword, createUser, getUser } from "../services/AuthModels.js";
+import { getPassword, getUserByEmail ,createUser, getUser } from "../services/AuthModels.js";
 import jwt from "jsonwebtoken";
 import isUserMidd from "../middlewares/Authentification.js";
 import bcrypt from "bcrypt";
@@ -28,10 +28,10 @@ router.post(
       const { mail, mdp , nom , prenom , tel , idRole , idCreatedpar , idEntreprise , isActive } = req.body;
 
       // Check if user already exists with the given email
-      // const existingUser = await models.getUserByEmail(email);
-      // if (existingUser) {
-      //   return res.status(400).json({ status: 400, message: "Email already exists" });
-      // }
+      const existingUser = await getUserByEmail(mail);
+      if (existingUser) {
+        return res.status(400).json({ status: 400, message: "Email already exists" });
+      }
 
 
       console.log(req.body)

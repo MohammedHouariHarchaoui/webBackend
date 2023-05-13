@@ -14,6 +14,10 @@ import RouterDrink from './src/api/v1/routes/Drink.js'
 import RouterAuthentification from './src/api/v1/routes/Authentification.js'
 import RouterCategorieDrink from './src/api/v1/routes/CategRecette.js'
 import RouterDistributeur from './src/api/v1/routes/DistributeurM.js'
+import RouterEntreprise from './src/api/v1/routes/Entreprise.js'
+import RouterPack from './src/api/v1/routes/Packet.js'
+import RouterUser from './src/api/v1/routes/User.js'
+import RouterRole from './src/api/v1/routes/Role.js'
 
 const { get } = pkg;
 const app = express();
@@ -33,11 +37,15 @@ app.use(RouterDrink)
 app.use(RouterAuthentification)
 app.use(RouterCategorieDrink)
 app.use(RouterDistributeur)
+app.use(RouterEntreprise)
+app.use(RouterPack)
+app.use(RouterUser)
+app.use(RouterRole)
 
-app.get('/users', async (req, res) => {
-  const users = await prisma.users.findMany()
-  res.json(users)
-})
+// app.get('/users', async (req, res) => {
+//   const users = await prisma.users.findMany()
+//   res.json(users)
+// })
 
 
 const PORT = process.env.PORT || 5000;

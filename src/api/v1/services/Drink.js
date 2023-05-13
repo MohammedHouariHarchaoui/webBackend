@@ -15,7 +15,7 @@ export const getDrinks = async (req , res)=>{
         const response = await prisma.recette.findMany();
         res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({msg : msg.error});
+        res.status(500).json({msg : error.msg});
     }
 }
 
@@ -28,7 +28,7 @@ export const getDrinkById = async (req , res)=>{
         });
         res.status(200).json(response);
     } catch (error) {
-        res.status(404).json({msg : msg.error});
+        res.status(404).json({msg : error.msg});
     }
 }
 
@@ -81,7 +81,7 @@ export const createDrink = async (req, res) => {
 
 
 export const updateDrink = async (req , res)=>{
-    const {name , description , price} = req.body;
+    const {name , description , price , idEntre} = req.body;
     try {
         const recette = await prisma.recette.update({
             where:{
@@ -93,6 +93,16 @@ export const updateDrink = async (req , res)=>{
                 price: Number(price)
             }
         });
+
+        // const pack = await prisma.pack.update({
+        //     where:{
+        //         id:Number(req.params.id)
+        //     },
+        //     data:{
+        //         idEntre : Number(idEntre),
+        //     }
+        // });
+
         res.status(201).json(recette);
     } catch (error) {
         res.status(400).json({msg : error.msg});

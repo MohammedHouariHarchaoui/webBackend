@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 
+
 const prisma = new PrismaClient();
 
 export const getDistributeurs = async (req , res)=>{
@@ -28,61 +29,91 @@ export const getDistributeurById = async (req , res)=>{
     }
 }
 
-export const createDistributeur = async (req , res)=>{
-    const {identifiant , capaciteGoblet , capaciteSpoon ,capaciteSucre} = req.body;
-    console.log(req.body);
-    try {
-        const distributeur = await prisma.distributeur.create({
-            data:{
-                identifiant: identifiant,
-                capaciteGoblet : Number(capaciteGoblet),
-                capaciteSucre  : Number(capaciteSucre),
-                capaciteSpoon  : Number(capaciteSpoon)
-            }
-        });
-        res.status(201).json(distributeur);
-    } catch (error) {
-        res.status(400).json({msg : error.msg});
-    }
-}
 
-export const updateDistributeur = async (req , res)=>{
-    const {identifiant , capaciteGoblet , capaciteSpoon ,capaciteSucre} = req.body;
+
+export const createDistributeurWithPack = async (req, res) => {
+    const { identifiant, capaciteGoblet, capaciteSucre, capaciteSpoon, pack } = req.body;
+  
     try {
-        const distributeur = await prisma.distributeur.update({
-            where:{
-                id:Number(req.params.id)
+      const distributeur = await prisma.distributeur.create({
+        data: {
+          identifiant,
+          capaciteGoblet,
+          capaciteSucre,
+          capaciteSpoon,
+        },
+      });
+  
+      const createdPack = await prisma.pack.create({
+        data: {
+          idDistr: distributeur.id,
+          idEntre: pack.idEntre,
+          codeverou: pack.codeverou,
+          localisation: pack.localisation,
+          state: pack.state,
+        },
+      });
+  
+      console.log(distributeur);
+      console.log(createdPack);
+  
+      res.json(distributeur);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Unable to create distributeur and pack' });
+    }
+  };
+  
+
+
+    export const updateDistributeurWithPack  = async (req, res) => {
+        const distributeurId = parseInt(req.params.id);
+        const { identifiant, capaciteGoblet, capaciteSucre, capaciteSpoon, pack } = req.body;
+      
+        try {
+          const updatedDistributeur = await prisma.distributeur.update({
+            where: { id: distributeurId },
+            data: {
+              identifiant,
+              capaciteGoblet,
+              capaciteSucre,
+              capaciteSpoon,
             },
-            data:{
-                identifiant:identifiant,
-                capaciteGoblet:Number(capaciteGoblet),
-                capaciteSpoon:Number(capaciteSpoon),
-                capaciteSucre:Number(capaciteSucre)
-            }
-        });
-        if (distributeur) {
-            res.status(200).json(distributeur);
-        } else {
-            res.status(404).json({ msg: "Distributeur not found" });
+          });
+      
+          const updatedPack = await prisma.pack.update({
+            where: { idDistr: distributeurId },
+            data: {
+              idEntre: pack.idEntre,
+              codeverou: pack.codeverou,
+              localisation: pack.localisation,
+              state: pack.state,
+            },
+          });
+      
+          console.log(updatedDistributeur);
+          console.log(updatedPack);
+      
+          res.json(updatedDistributeur);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Unable to update distributeur and pack' });
         }
-    } catch (error) {
-        res.status(400).json({msg : error.msg});
-    }
-}
+      };
+      
 
-export const deleteDistributeur = async (req , res)=>{
+
+
+export const deleteDistributeur = async (req, res) => {
+    const distributeurId = parseInt(req.params.id);
+  
     try {
-        const distributeur = await prisma.distributeur.delete({
-            where:{
-                id:Number(req.params.id)
-            }
-        });
-        if (distributeur) {
-            res.status(200).json(distributeur);
-        } else {
-            res.status(404).json({ msg: "Distribbuteur not found" });
-        }
+      await prisma.distributeur.delete({
+        where: { id: distributeurId },
+        include: { pack: true },
+      });
+      res.json({ message: 'Distributeur and pack deleted successfully' });
     } catch (error) {
-        res.status(400).json({msg : error.msg});
+      res.status(500).json({ error: 'Unable to delete distributeur and pack' });
     }
-}
+  }

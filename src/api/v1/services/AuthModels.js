@@ -40,4 +40,14 @@ async function getUser(id) {
   }
 }
 
-export { getPassword, createUser, getUser };
+
+async function getUserByEmail(mail) {
+  try {
+    const user = await prisma.users.findUnique({ where: { mail : mail } });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { getPassword, getUserByEmail ,createUser, getUser };

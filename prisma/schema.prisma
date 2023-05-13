@@ -16,7 +16,7 @@ model categorie {
 model categoryrecette {
   id          Int     @id @default(autoincrement())
   description String? @db.VarChar(120)
-  recette recette[]
+  // recette recette[]
   publicite publicite[]
 }
 
@@ -49,7 +49,7 @@ model entrepise {
   mail    String? @db.VarChar(120)
   tel     String? @db.VarChar(120)
   link    String? @db.VarChar(120)
-  pack pack[]
+  // pack pack[]
   users users[]
 }
 
@@ -78,7 +78,7 @@ model pack {
   localisation String? @db.VarChar(120)
   state        String? @db.VarChar(120)
   distr distributeur @relation(fields: [idDistr], references: [id])
-  entre entrepise @relation(fields: [idEntre], references: [id])
+  // entre entrepise @relation(fields: [idEntre], references: [id])
   @@id([idDistr, idEntre])
   @@index([idEntre], map: "idEntre")
   
@@ -98,17 +98,18 @@ model publicite {
 
 model recette {
   id             Int     @id @default(autoincrement())
-  idCategRecette Int? @unique
-  name    String? @db.VarChar(120)
-  description String? @db.VarChar(500)
-  price Decimal @default(0.0)
-  imageLink String? @db.VarChar(120)
+  idCategRecette Int
+  name           String? @db.VarChar(120)
+  description    String? @db.VarChar(500)
+  price          Decimal @default(0.0)
+  imageLink      String? @db.VarChar(120)
+
+  commande       commande[]
+  recetteingr    recetteingr[]
 
   @@index([idCategRecette], map: "idCategRecette")
-  commande commande[]
-  categoryrecette categoryrecette? @relation(fields: [idCategRecette], references: [id])
-  recetteingr recetteingr[]
 }
+
 
 model reclamation {
   id        Int      @id @default(autoincrement())
@@ -141,9 +142,9 @@ model task {
 
 model users {
   id           Int     @id @default(autoincrement())
-  nom          String? @db.VarChar(120)
-  prenom       String? @db.VarChar(120)
-  mail         String? @db.VarChar(120)
+  nom          String? @db.VarChar(120) 
+  prenom       String? @db.VarChar(120) 
+  mail         String? @db.VarChar(120) @unique
   mdp          String? @db.VarChar(120)
   tel          String? @db.VarChar(120)
   idRole       Int?
