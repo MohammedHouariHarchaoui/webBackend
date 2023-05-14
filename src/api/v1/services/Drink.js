@@ -32,12 +32,29 @@ export const getDrinkById = async (req , res)=>{
     }
 }
 
+
+
+export const getDrinkByIdEntreprise = async (req , res)=>{
+    try {
+        const response = await prisma.recette.findMany({
+            where:{
+                idEntreprise : Number(req.params.id)
+            }
+        });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(404).json({msg : error.msg});
+    }
+}
+
+
+
 export const createDrink = async (req, res) => {
 
     const form = formidable({
         multiples: false,
         keepExtensions: true,
-        fields: ['name', 'description', 'price','idCategRecette'],
+        fields: ['name', 'description', 'price','idCategRecette','idEntreprise'],
         fileFilter: function(req, file, callback) {
             if (!file.type.startsWith('video/')) {
               return callback(new Error('Only image files are allowed!'));
@@ -60,7 +77,7 @@ export const createDrink = async (req, res) => {
             });
             console.log(result);
 
-            const {idCategRecette, name , description ,price } = fields;
+            const {idCategRecette, name , description ,price ,idEntreprise} = fields;
             console.log(fields);
             const recette = await prisma.recette.create({
                 data: {
@@ -68,6 +85,7 @@ export const createDrink = async (req, res) => {
                     idCategRecette: Number(idCategRecette),
                     price: Number(price),
                     description : description,
+                    idEntreprise : Number(idEntreprise),
                     imageLink: result.secure_url
                 }
             });

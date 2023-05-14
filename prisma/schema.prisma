@@ -99,6 +99,7 @@ model publicite {
 model recette {
   id             Int     @id @default(autoincrement())
   idCategRecette Int
+  idEntreprise Int   @default(1)
   name           String? @db.VarChar(120)
   description    String? @db.VarChar(500)
   price          Decimal @default(0.0)

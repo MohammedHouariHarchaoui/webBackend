@@ -2,14 +2,21 @@ import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
-export const getUsers = async (req , res)=>{
+export const getUsers = async (req, res) => {
     try {
-        const response = await prisma.users.findMany();
-        res.status(200).json(response);
+      const response = await prisma.users.findMany({
+        where: {
+          NOT: {
+            idRole: 1,
+            isActive: 0,
+          },
+        },
+      });
+      res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({msg : error.msg});
+      res.status(500).json({ msg: error.message });
     }
-}
+  };
 
 
 
@@ -17,7 +24,11 @@ export const getUsersByIdRole = async (req , res)=>{
     try {
         const response = await prisma.users.findMany({
             where:{
-                idRole : Number(req.params.id)
+                idRole : Number(req.params.id),
+                NOT: {
+                    idRole: 1,
+                    isActive: 0,
+                  },
             },
         });
         res.status(200).json(response);
