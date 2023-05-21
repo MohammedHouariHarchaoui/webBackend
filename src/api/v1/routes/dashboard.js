@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getDistributeurs, getInfoDistributeur, attributeDistr, addDistributeur, editDistributeur, getADM, addClient, getAdmins, deleteAccount, addAdmin, deleteDistributeur,getAccount, addAccount, editAccount, affecterClient, getClients, editClient, getPack, editPack, getNbTask } from "../services/dashboard.js";
+import { getDistributeurs, getInfoDistributeur, attributeDistr, addDistributeur, editDistributeur, getADM, addClient, getAdmins, deleteAccount, addAdmin, deleteDistributeur,getAccount, addAccount, editAccount, affecterClient, getClients, editClient, getPack, editPack, getNbTask, StatMois } from "../services/dashboard.js";
 
 const router = Router();
 
@@ -295,6 +295,20 @@ router.get(
     } catch (e) {
       console.log(e.message);
       res.status(404).send({ message: "Impossible d'envoyer le nombre de tasks !!" });
+    }
+  }
+);
+
+router.get(
+  "/statMois/:mois",
+  async (req, res) => {
+    try {
+      console.log("statistiques par mois");
+      let info = await StatMois(req.params.mois);
+      res.status(200).send(info);
+    } catch (e) {
+      console.log(e);
+      res.status(404).send({ message: "Impossible d'envoyer les statistiques !!" });
     }
   }
 );

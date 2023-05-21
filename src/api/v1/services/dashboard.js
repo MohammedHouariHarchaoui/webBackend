@@ -433,3 +433,36 @@ export async function getNbTask(id) {
     return response
 }
 
+//date de creation du task 
+export async function createdAt(idTask) {
+    
+    const record = await prisma.task.findUnique({
+        where: { id: idTask },
+      });
+      
+      if (record) {
+        const createdAt = record.createdAt;
+        console.log("Creation date:", createdAt);
+      } else {
+        console.log("Task not found");
+      }
+      return createdAt
+}
+
+//Statistiques tasks par mois
+export async function StatMois(mois) {
+ 
+    const tasks = await prisma.task.findMany({
+        where: {
+          date: {
+            contains:'2023-05-13' /*toString(mois)*/
+          }
+        }
+        
+      });
+      console.log(tasks[0]),
+      NbTask = tasks.length()
+      
+      return NbTask
+
+}
